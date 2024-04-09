@@ -10,7 +10,7 @@ Un reverse shell est une technique de sécurité informatique permettant à un a
 
 ## Comment l'attaquant fait pour obtenir un reverse shell ?
 
-Très souvent, cela implique généralement de faire télécharger et exécuter un programme contenant du code malveillant, tel qu'un "shellcode" (on reviendra sur ce terme un peu plus tard), sur la machine cible. Ce code malveillant établit ensuite une connexion à distance vers un serveur contrôlé par l'attaquant.
+Très souvent, cela implique de faire télécharger et exécuter un programme contenant du code malveillant, tel qu'un "shellcode" (on reviendra sur ce terme un peu plus tard), sur la machine cible. Ce code malveillant établit ensuite une connexion à distance vers un serveur contrôlé par l'attaquant.
 
 Une fois la connexion établie, l'attaquant peut envoyer des commandes au système compromis comme s'il s'agissait de son propre terminal, tout en recevant la sortie de ces commandes.
 

@@ -152,7 +152,7 @@ mov rax, 42 ; RAX prends la valeur 42 (numéro du syscall SYS_CONNECT)
 syscall
 ```
 
-A ce stade, si le programme fonctionne bien, lorsque l’on execute notre programme assembleur et qu’on lance un listener (netcat) à coté on reçoit ce message : 
+A ce stade, si le programme fonctionne bien, lorsque l’on execute notre programme assembleur et qu’on lance un listener (netcat) sur un autre terminal, on reçoit ce message : 
 
 ```nasm
 ┌──(dropa㉿kali)-[~]

@@ -277,7 +277,7 @@ Déassemblage de la section .text :
 
 ```
 
-Je n'ai inclus que la première partie du retour d'objdump, car on peut observer qu'il reste un grand nombre de null bytes, ces "fameux  “00” qui rendent notre shellcode inopérant.
+Je n'ai inclus que la première partie du retour d'objdump, car on peut observer qu'il reste un grand nombre de null bytes, ces fameux  "00" qui rendent notre shellcode inopérant.
 
 Essayons de comprendre pourquoi nous avons des null bytes.
 

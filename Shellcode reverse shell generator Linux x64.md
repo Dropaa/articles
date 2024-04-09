@@ -47,7 +47,7 @@ Très rapidement, ce code va utiliser le syscall SYS_WRITE pour écrire sur le t
 
 J’assemble mon code assembleur et j’utilise un linker permettant de créer un **exécutable.**
 
-Et quand je l’exécute on vois bien que le message “Hello World” est bien affiché sur mon terminal : 
+Et quand je l’exécute on voit que le message “Hello World” est bien affiché sur mon terminal : 
 
 ```nasm
 ┌──(dropa㉿kali)-[~/Bureau/articles/shellcode/expl]

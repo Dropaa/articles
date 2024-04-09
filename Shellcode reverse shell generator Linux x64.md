@@ -20,7 +20,7 @@ Ce reverse shell permet ainsi d'exercer un contrôle quasi total sur la machine 
 
 Un shellcode, c’est une chaine de caractère qui représente du code exécutable. C’est tout :)
 
-Prenons un exemple très simple : Un programme en assembleur qui affiche “Hello World” dans la console :
+Prenons un exemple très simple : un programme en assembleur qui affiche “Hello World” dans la console :
 
 ```nasm
 global _start
@@ -43,7 +43,7 @@ section .rodata
   msglen: equ $ - msg
 ```
 
-Très rapidement ce code va utiliser le syscall SYS_WRITE pour écrire sur le terminal (STDOUT) “Hello World” puis quitter le programme avec le code 0 (qui veut dire que tout c’est bien passé) en utilisant le syscall SYS_EXIT.
+Très rapidement, ce code va utiliser le syscall SYS_WRITE pour écrire sur le terminal (STDOUT) “Hello World” puis quitter le programme avec le code 0 (qui veut dire que tout c’est bien passé) en utilisant le syscall SYS_EXIT.
 
 J’assemble mon code assembleur et j’utilise un linker permettant de créer un **exécutable.**
 

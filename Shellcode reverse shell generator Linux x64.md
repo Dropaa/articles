@@ -94,24 +94,24 @@ Avant de se soucier des null bytes, rédigeons notre reverse shell en assembleur
 
 # Reverse shell en assembleur
 
-Bon, maintenant que l'on sait ce qu'un reverse shell, développons le notre !
+Bon, maintenant que l'on sait ce qu'est un reverse shell, développons le notre !
 
 Pour le choix du langage de programmation, il sera développé en assembleur ce qui facilite grandement l'élimination des null bytes. Contrairement à l'utilisation de langages comme le C ou Rust, où la manipulation des null bytes peut être plus complexe, l'assembleur me permet d'avoir un contrôle direct sur les instructions, simplifiant ainsi le processus de suppression des null bytes.
 
 La méthode la plus simple et la plus courte pour créer un reverse shell sur un ordinateur tournant sous Linux 64 bits est d'utiliser la méthodologie suivante :
 
-- On crée un socket, un **tunnel** ou les informations vont transiter telles que : les commandes envoyées et leur retour. Pour ce faire on utilise le syscall **SYS_SOCKET**.
+- On crée un socket, un **tunnel** où les informations vont transiter telles que : les commandes envoyées et leur retour. Pour ce faire on utilise le syscall **SYS_SOCKET**.
 - On **connecte la machine victime au serveur contrôlé par l'attaquant**, le "listener", et on indique à l'ordinateur d'utiliser le socket (tunnel) pour faire transiter les informations vers le serveur de l'attaquant. Le syscall utiliser ici sera **SYS_CONNECT**.
-- Une fois la connexion au serveur établie, on va alors faire une petite manipulation : Tout ce qui est censé être affiché sur la machine victime (STDOUT) mais également ses entrées comme le fait d'écrire sur le clavier seront **redirigé vers le serveur de l'attaquant**. Concrètement, l'attaquant va se faire passer pour la victime en écrivant à sa place et en recevant le retour des commandes à sa place. Il va **dupliquer** ce qu'on appelle les "file descriptors" de la victime. On utilisera ici le syscall **SYS_DUP2**.
-- Enfin, une fois la redirection / duplication des file descriptor faite, on va pouvoir **exécuter les commandes** envoyés par l'attaquant. On va "simuler" l'envoi de cette commande dans le terminal de la victime : **/bin//sh "commande_envoyé_par_l'attaquant"**. Pour pouvoir faire ceci, on utilise le syscall **SYS_EXECVE**.
+- Une fois la connexion au serveur établie, on va alors faire une petite manipulation : tout ce qui est censé être affiché sur la machine victime (STDOUT) mais également ses entrées comme le fait d'écrire sur le clavier seront **redirigés vers le serveur de l'attaquant**. Concrètement, l'attaquant va se faire passer pour la victime en écrivant à sa place et en recevant le retour des commandes à sa place. Il va **dupliquer** ce qu'on appelle les "file descriptors" de la victime. On utilisera ici le syscall **SYS_DUP2**.
+- Enfin, une fois la redirection / duplication des file descriptor faite, on va pouvoir **exécuter les commandes** envoyées par l'attaquant. On va "simuler" l'envoi de cette commande dans le terminal de la victime : **/bin//sh "commande_envoyé_par_l'attaquant"**. Pour pouvoir faire ceci, on utilise le syscall **SYS_EXECVE**.
 
 Maintenant que la méthodologie est comprise, commençons par créer un socket !
 
 ## SYS_SOCKET
 
-Pour créer un socket on soit utiliser le syscall SYS_SOCKET.
+Pour créer un socket on doit utiliser le syscall SYS_SOCKET.
 
-Pour savoir quelles sont les options nécéssaires à chaque syscall j’utilise ces excellents sites : [https://x64.syscall.sh/](https://x64.syscall.sh/) et [https://man7.org/linux/man-pages/man2/](https://man7.org/linux/man-pages/man2/)
+Pour savoir quelles sont les options nécessaires à chaque syscall j’utilise ces excellents sites : [https://x64.syscall.sh/](https://x64.syscall.sh/) et [https://man7.org/linux/man-pages/man2/](https://man7.org/linux/man-pages/man2/)
 
 Pour faire fonctionner le syscall SYS_SOCKET voici les informations nécessaires : 
 
@@ -125,9 +125,9 @@ syscall ; On execute la fonction socket() pour créer un socket :)
 
 Une fois le syscall exécuté, si tout c’est bien passé, un nouveau file descriptor pointant vers le tunnel venant d’être créer est stocké dans le registre RAX.
 
-On va donc stocker ce file descriptor qui sera essentiel pour indiquer vers ou les ifnromations entrantes et sortantes vont transiter.
+On va donc stocker ce file descriptor qui sera essentiel pour indiquer vers où les informations entrantes et sortantes vont transiter.
 
-Je vais pour ce faire utiliser un registre qui ne sera pas modifié pendant toute la durée de vie du programme et qui va représenter ce file descriptor pointant vers le socket : le registre r8.
+Je vais pour ce faire, utiliser un registre qui ne sera pas modifié pendant toute la durée de vie du programme et qui va représenter ce file descriptor pointant vers le socket : le registre r8.
 
 ```nasm
 mov r8, rax
@@ -152,7 +152,7 @@ mov rax, 42 ; RAX prends la valeur 42 (numéro du syscall SYS_CONNECT)
 syscall
 ```
 
-A ce stade, si le programme fonctionne bien, lorsque l’on execute n,otre programme assembleur et qu’on lance un listener (netcat) à coté on reçoit ce message : 
+A ce stade, si le programme fonctionne bien, lorsque l’on execute notre programme assembleur et qu’on lance un listener (netcat) à coté on reçoit ce message : 
 
 ```nasm
 ┌──(dropa㉿kali)-[~]
@@ -163,7 +163,7 @@ connect to [192.168.45.128] from (UNKNOWN) [192.168.45.128] 43262
 
 L’ordinateur victime s’est bien connecté à notre listener.
 
-Nous allons maintenant dupliquer et rediriger les trois file descriptor de Linux vers notre tunnel pour les faire arriver au listener et vice versa.
+Nous allons maintenant dupliquer et rediriger les trois file descriptor de Linux vers notre tunnel pour les rediriger vers le listener et vice versa.
 
 ## SYS_DUP2
 

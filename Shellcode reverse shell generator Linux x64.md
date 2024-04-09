@@ -80,7 +80,7 @@ Déassemblage de la section .text :
   401025:       0f 05                   syscall
 ```
 
-Ce que l’on voit dans la première colonne sont les adresses qui correspondent à l’instruction assembleur (3ème colonne). La deuxième colonne représente ce que l’on appelle des OPCodes, ce sont les instructions assembleurs mais en binaire pour que le processeur puisse comprendre ce qu’il doit faire. Et ce sont ces opcode qui correspondent au shellcode une fois concaténé. On les sépare avec des “\x” pour représenter que ce sont des caractère hexadécimaux et on a le shellcode complet pour afficher “Hello World” dans un terminal : 
+Ce que l’on voit dans la première colonne sont les adresses qui correspondent à l’instruction assembleur (3ème colonne). La deuxième colonne représente ce que l’on appelle des OPCodes, ce sont les instructions assembleurs mais en binaire pour que le processeur puisse comprendre ce qu’il doit faire. Et ce sont ces OPCodes qui correspondent au shellcode une fois concaténé. On les sépare avec des “\x” pour représenter des caractère hexadécimaux et on a le shellcode complet pour afficher “Hello World” dans un terminal : 
 
 ```nasm
 \xb8\x01\x00\x00\x00\xbf\x01\x00\x00\x00\x48\xbe\x00\x20\x40\x00\x00\x00\x00\x00\xba\x0e\x00\x00\x00\x0f\x05\xb8\x3c\x00\x00\x00\xbf\x00\x00\x00\x00\x0f\x05

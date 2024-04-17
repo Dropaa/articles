@@ -16,6 +16,54 @@ Une fois la connexion établie, l'attaquant peut envoyer des commandes au systè
 
 Ce reverse shell permet ainsi d'exercer un contrôle quasi total sur la machine compromise. 😮
 
+# Assembleur et les syscalls
+
+Si vous n'avez jamais eu l'occasion de plonger dans le monde de l'assembleur, ne vous sentez pas découragé. Dans cet pré introduction, je vais vous éclairer sur la signification d'un syscall et sur la manière de faire appel à ces fonctions !
+
+Lorsque nous programmons en langage assembleur, nous sommes souvent confrontés à la nécessité de **communiquer avec le système d'exploitation** pour effectuer des opérations telles que la lecture et l'écriture de fichiers, la gestion des processus ou l'interaction avec les périphériques. Les syscalls, ou appels système, sont le mécanisme par lequel **les programmes** en espace utilisateur ou user space) peuvent **demander des services au noyau** du système d'exploitation (kernel).
+
+Dans le langage assembleur, les appels système, ou syscalls, sont habituellement effectués en utilisant des instructions spécifiques au processeur. Ces instructions transfèrent le contrôle au noyau afin d'exécuter une opération spécifique. Par exemple, le syscall SYS_WRITE permet d'écrire dans un terminal, un fichier, etc., en fonction du file descriptor (descripteur de fichier) fourni.
+
+Pour illustrer cela, imaginons que nous voulions afficher "Hello World" dans le terminal en utilisant SYS_WRITE. Pour déterminer les paramètres nécessaires à la fonction write(), il existe des ressources en ligne répertoriant tous les syscalls sous Linux ainsi que les paramètres requis pour leur bon fonctionnement.
+
+Sur l'une de ces ressources, nous pouvons trouver les informations suivantes :
+
+| NR | SYSCALL NAME | RAX | ARG0 (rdi) | ARG1 (rsi) | ARG2 (rdx) |
+| --- | --- | --- | --- | --- | --- |
+| 1 | write | 1 | unsigned int fd | const char *buf | size_t count |
+
+En résumé, pour faire fonctionner l’appel système SYS_WRITE, la fonction a besoin d’un total de quatre arguments :
+
+- Dans RAX : La valeur 1
+- Dans RDI : Le file descriptor (ici ce sera STDOUT (sortie standard) pour indiquer le terminal)
+- Dans RSI : L’adresse du buffer contenant la chaine de caractère à imprimer
+- Dans RDX : La taille totale du buffer de RSI
+
+Si vous n'avez jamais travaillé avec l'assembleur, vous pourriez vous demander : quels sont RAX, RDI, RSI et RDX dont il est question ? Ce sont ce que l'on appelle des **registres** ! 
+En assembleur, les registres sont des emplacements de mémoire très rapides situés directement sur le processeur qui nous permettent de stocker des valeurs, des adresses ou des variables.
+
+Une fois que tous les arguments sont passés dans les bons registres, on utilise une instruction nommée SYSCALL qui va appeler la fonction dont il est question (grâce à son “ID” dans RAX) et ses arguments si elle en possède.
+
+Voici à quoi doit ressembler votre code pour afficher “Hello World” dans le terminal en assembleur : 
+
+```nasm
+mov rax, 1        ;   SYS_WRITE
+mov rdi, 1        ;   STDOUT
+mov rsi, msg      ;   Pointeur vers la variable "msg" contenant : "Hello, world!\n",
+mov rdx, msglen   ;   Variable contenant la taille de "msg"
+syscall    
+```
+
+Et quand on lance le programme : 
+
+```nasm
+┌──(dropa㉿kali)-[~/Bureau/articles/shellcode/expl]
+└─$ ./hello  
+Hello, world!
+```
+
+Maintenant nous allons voir comment créer un shellcode à partir de ce même exemple ! 
+
 # Lexique : Le shellcode
 
 Un shellcode, c’est une chaine de caractère qui représente du code exécutable. C’est tout :)

@@ -56,7 +56,7 @@ syscall
 
 Et quand on lance le programme : 
 
-```nasm
+```bash
 ┌──(dropa㉿kali)-[~/Bureau/articles/shellcode/expl]
 └─$ ./hello  
 Hello, world!
@@ -97,7 +97,7 @@ J’assemble mon code assembleur et j’utilise un linker permettant de créer u
 
 Et quand je l’exécute on voit que le message “Hello World” est bien affiché sur mon terminal : 
 
-```nasm
+```bash
 ┌──(dropa㉿kali)-[~/Bureau/articles/shellcode/expl]
 └─$ nasm -f elf64 -o hello.o hello.asm && ld -o hello hello.o 
                                                                                                                                                                                                            
@@ -108,7 +108,7 @@ Hello, world!
 
 Maintenant, pour récupérer ce fameux shellcode (la chaîne de caractère qui représente le code exécutable) je vais utiliser un outil qui s’appelle objdump : 
 
-```nasm
+```bash
 ┌──(dropa㉿kali)-[~/Bureau/articles/shellcode/expl]
 └─$ objdump -d hello                                  
 
@@ -202,7 +202,7 @@ syscall
 
 A ce stade, si le programme fonctionne bien, lorsque l’on execute notre programme assembleur et qu’on lance un listener (netcat) sur un autre terminal, on reçoit ce message : 
 
-```nasm
+```bash
 ┌──(dropa㉿kali)-[~]
 └─$ nc -lnvp 4444
 listening on [any] 4444 ...

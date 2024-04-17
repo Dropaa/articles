@@ -450,3 +450,7 @@ _start:
 	; Cela signifie qu'il n'y a pas d'arguments à passer à execve
 	syscall ; Appelle la fonction execve pour exécuter le shell "/bin//sh"
 ```
+
+# Partie 2 !
+
+Dans le prochain article,  on apprendra ce qu'est un shellcode métamorphique et comment en créer rapidement et facilement en utilisant Python !
